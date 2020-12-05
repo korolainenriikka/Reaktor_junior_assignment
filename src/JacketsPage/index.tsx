@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import axios from 'axios'
 import { API_URL } from '../constants'
 
-const ShirtsPage: React.FC = () => {
+const JacketsPage: React.FC = () => {
 
   useEffect(() => {
-    axios.get<any[]>(`${API_URL}/products/shirts`)
+    axios.get<any[]>(`${API_URL}/products/jackets`)
      .then((response) => {
        console.log(response.data)
      })
@@ -16,9 +16,9 @@ const ShirtsPage: React.FC = () => {
 
   return (
     <div>
-      In category: Shirts
+      In category: Jackets
     </div>
   )
 }
 
-export default ShirtsPage
+export default JacketsPage

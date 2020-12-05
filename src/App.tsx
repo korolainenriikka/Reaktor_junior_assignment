@@ -1,16 +1,17 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 
-import JeansPage from './JeansPage'
+import JacketsPage from './JacketsPage'
 import ShirtsPage from './ShirtsPage'
 import AccessoriesPage from './AccessoriesPage'
 
 const App: React.FC = () => {
   return (
     <div>
+      <h1>Inventory</h1>
       <Router>
         <button>
-          <Link to="/jeans">Jeans</Link>
+          <Link to="/jeans">Jackets</Link>
         </button>
         <button>
           <Link to="/shirts">Shirts</Link>
@@ -20,7 +21,7 @@ const App: React.FC = () => {
         </button>
 
         <Switch>
-          <Route path="/jeans" render={() => <JeansPage />} />
+          <Route path="/jeans" render={() => <JacketsPage />} />
           <Route path="/shirts" render={() => <ShirtsPage />} />
           <Route path="/accessories" render={() => <AccessoriesPage />} />
         </Switch>
