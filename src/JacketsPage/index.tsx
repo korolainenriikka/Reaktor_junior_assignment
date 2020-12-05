@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import axios from 'axios'
 import { API_URL } from '../constants'
+import { Item } from '../types'
 
 const JacketsPage: React.FC = () => {
 
   useEffect(() => {
-    axios.get<any[]>(`${API_URL}/products/jackets`)
+    axios.get<Item[]>(`${API_URL}/products/jackets`)
      .then((response) => {
        console.log(response.data)
      })
