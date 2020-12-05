@@ -4,4 +4,4 @@ export type State = {
   jackets: Item[];
   shirts: Item[];
   accessories: Item[];
-};
+}
