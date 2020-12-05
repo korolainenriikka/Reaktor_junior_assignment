@@ -8,23 +8,21 @@ interface TableProps {
 const ProductTable: React.FC<TableProps> = (props) => {
   return (
     <table>
-      <th>
-        <td>id</td>
-        <td>name</td>
-        <td>colors</td>
-        <td>manufacturer</td>
-        <td>availability</td>
-      </th>
-      <tbody>
-        {props.items.map(i => (
-          <tr key={i.id}>
-            <td>{i.id}</td>
-            <td>{i.name}</td>
-            <td>{i.color}</td>
-            <td>{i.manufacturer}</td>
-          </tr>
-        ))}
-      </tbody>
+      <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>colors</th>
+        <th>manufacturer</th>
+        <th>availability</th>
+      </tr>
+      {props.items.map(i => (
+        <tr key={i.id}>
+          <td>{i.id}</td>
+          <td>{i.name}</td>
+          <td>{i.color}</td>
+          <td>{i.manufacturer}</td>
+        </tr>
+      ))}
     </table>
   )
 }
