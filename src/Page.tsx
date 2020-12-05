@@ -1,30 +1,41 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+
+import { useStateValue, setItems } from './state'
 import { API_URL } from './constants'
-import { Item } from './types'
+import { category, Item } from './types'
+
 import ProductTable from './components/ProductTable'
-import { useStateValue } from './state'
 
 interface PageProps {
-  category: string;
+  category: category;
 }
 
 const Page: React.FC<PageProps> = (props) => {
   const category = props.category
-  const [items, setItems] = useState<Item[]>([])
+  const [items, setItemz] = useState<Item[]>([])
 
-  const state = useStateValue()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [state, dispatch] = useStateValue()
   console.log(state)
 
   useEffect(() => {
-    axios.get<Item[]>(`${API_URL}/products/${category}`)
-      .then((response) => {
-        setItems(response.data)
-      })
-      .catch((error ) => {
-        console.log(error)
-      })
-  }, [category])
+    const fetchItemList = async () => {
+      try {
+        const { data: itemListFromApi } = await axios.get<Item[]>(
+          `${API_URL}/products/${category}`
+        )
+        setItemz(itemListFromApi)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        dispatch(setItems(itemListFromApi, category))
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchItemList()
+
+  }, [category, dispatch])
 
   return (
     <div>

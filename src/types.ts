@@ -1,18 +1,4 @@
-/*
-FROM API
-{
-        "id": "f8016f8e3897cbd129ec0fde",
-        "type": "shirts",
-        "name": "NYXBE BRIGHT METROPOLIS",
-        "color": [
-            "yellow"
-        ],
-        "price": 44,
-        "manufacturer": "derp"
-    },
-*/
-
-enum itemType {
+export enum category {
   Jackets ='jackets',
   Shirts = 'shirts',
   Accessories = 'accessories'
@@ -20,7 +6,7 @@ enum itemType {
 
 export interface Item {
   id: string;
-  type: itemType;
+  type: category;
   name: string;
   color: string;
   price: number;
