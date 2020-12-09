@@ -6,24 +6,20 @@ import { category, Item } from './types'
 
 import axios from 'axios'
 
-import { useStateValue, setItems } from './state'
+import { useStateValue, setItems, updateAvailability } from './state'
 import { API_URL } from './constants'
 import { axiosResToAvailabilityData } from './utils/toAvailabilityData'
 
 const App: React.FC = () => {
   const [state, dispatch] = useStateValue()
   console.log(state)
-  let manufacturers = []
 
   const fetchAvailabilityData = (manufacturerName: string) => {
       axios.get(
         `${API_URL}/availability/${manufacturerName}`
       ).then( response => {
-        //IN UTIL: convert res to availabilitydata
-        console.log(response)
         const availabilityData = axiosResToAvailabilityData(response)
-        console.log(availabilityData)
-        //dispatch(updateAvailability(response.data.response))
+        //dispatch(updateAvailability(availabilityData))
       })
       .catch((e) => {
         console.error(e)
@@ -36,46 +32,36 @@ const App: React.FC = () => {
         const { data: jacketListFromApi } = await axios.get<Item[]>(
           `${API_URL}/products/jackets`
         )
-        manufacturers = findManufacturers(jacketListFromApi)
         dispatch(setItems(jacketListFromApi, category.Jackets))
 
         const { data: shirtListFromApi } = await axios.get<Item[]>(
           `${API_URL}/products/shirts`
         )
-        manufacturers = findManufacturers(shirtListFromApi)
         dispatch(setItems(shirtListFromApi, category.Shirts))
 
         const { data: accessoriesListFromApi } = await axios.get<Item[]>(
           `${API_URL}/products/accessories`
         )
-        manufacturers = findManufacturers(accessoriesListFromApi)
         dispatch(setItems(accessoriesListFromApi, category.Accessories))
 
+        const manufacturers = findManufacturers(jacketListFromApi, shirtListFromApi, accessoriesListFromApi)
         manufacturers.forEach(m => fetchAvailabilityData(m))
       } catch (e) {
         console.error(e)
       }
     }
 
-    const findManufacturers = (items: Item[]): string[] => {
-      const allManufacturers = items.map(i => i.manufacturer)
+    const findManufacturers = (...lists: Item[][]): string[] => {
+      const allManufacturers:string[] = []
+      lists.forEach(list => list.forEach(item => allManufacturers.push(item.manufacturer)))
       const uniques = [...new Set(allManufacturers)]
       return uniques
     }
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchItemList()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
-
- /* useEffect(() => {
-    const fetchAvailabilityData = async () => {
-      try {
-
-      } catch (e) {
-        console.error(e)
-      }
-    }
-  }, [])*/
 
   return (
     <div>
