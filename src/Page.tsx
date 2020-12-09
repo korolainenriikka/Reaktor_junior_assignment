@@ -8,10 +8,11 @@ import { category, Item } from './types'
 import ProductTable from './components/ProductTable'
 
 interface PageProps {
+  items: Item[],
   category: category;
 }
 
-const Page: React.FC<PageProps> = (props) => {
+const Page: React.FC<PageProps> = (props: PageProps) => {
   const category = props.category
   const [items, setItemz] = useState<Item[]>([])
 
