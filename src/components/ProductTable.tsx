@@ -24,6 +24,7 @@ const ProductTable: React.FC<TableProps> = (props) => {
             <td>{i.name}</td>
             <td>{i.color}</td>
             <td>{i.manufacturer}</td>
+            <td>{i.availability}</td>
           </tr>
         ))}
       </tbody>

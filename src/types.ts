@@ -11,6 +11,7 @@ export interface Item {
   color: string;
   price: number;
   manufacturer: string;
+  availability: Availability | undefined;
 }
 
 export enum Availability {
@@ -22,4 +23,9 @@ export enum Availability {
 export interface AvailabilityData {
   id: string;
   availability: Availability;
+}
+
+export interface AvailabilityResponse {
+  status: number,
+  response: AvailabilityData[]
 }

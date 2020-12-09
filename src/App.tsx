@@ -2,17 +2,29 @@ import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 
 import Page from './Page'
-import { category, Item } from './types'
+import { category, Item, AvailabilityData, AvailabilityResponse } from './types'
 
 import axios from 'axios'
 
-import { useStateValue, setItems } from './state'
+import { useStateValue, setItems, updateAvailability } from './state'
 import { API_URL } from './constants'
 
 const App: React.FC = () => {
   const [state, dispatch] = useStateValue()
   console.log(state)
   let manufacturers = []
+
+  const fetchAvailabilityData = (manufacturerName: string) => {
+      axios.get(
+        `${API_URL}/availability/${manufacturerName}`
+      ).then( response => {
+        console.log(response.data.response)
+        dispatch(updateAvailability(response.data.response))
+      })
+      .catch((e) => {
+        console.error(e)
+      })
+  }
 
   useEffect(() => {
     const fetchItemList = async () => {
@@ -35,7 +47,7 @@ const App: React.FC = () => {
         manufacturers = findManufacturers(accessoriesListFromApi)
         dispatch(setItems(accessoriesListFromApi, category.Accessories))
 
-        console.log(manufacturers)
+        manufacturers.forEach(m => fetchAvailabilityData(m))
       } catch (e) {
         console.error(e)
       }
