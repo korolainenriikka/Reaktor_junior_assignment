@@ -1,5 +1,5 @@
 import { State } from './state'
-import { category, Item } from '../types'
+import { category, Item, AvailabilityData } from '../types'
 
 export type Action =
   | {
@@ -13,6 +13,10 @@ export type Action =
   | {
     type: "SET_ACCESSORIES_LIST";
     payload: Item[];
+  }
+  | {
+    type: "UPDATE_AVAILABILITY_DATA";
+    payload: AvailabilityData[];
   }
 
 export const reducer = (state: State, action: Action): State => {

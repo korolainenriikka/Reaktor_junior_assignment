@@ -26,11 +26,13 @@ const App: React.FC = () => {
         const { data: shirtListFromApi } = await axios.get<Item[]>(
           `${API_URL}/products/shirts`
         )
+        manufacturers = findManufacturers(shirtListFromApi)
         dispatch(setItems(shirtListFromApi, category.Shirts))
 
         const { data: accessoriesListFromApi } = await axios.get<Item[]>(
           `${API_URL}/products/accessories`
         )
+        manufacturers = findManufacturers(accessoriesListFromApi)
         dispatch(setItems(accessoriesListFromApi, category.Accessories))
 
         console.log(manufacturers)
