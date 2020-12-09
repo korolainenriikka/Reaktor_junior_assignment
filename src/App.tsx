@@ -12,6 +12,7 @@ import { API_URL } from './constants'
 const App: React.FC = () => {
   const [state, dispatch] = useStateValue()
   console.log(state)
+  let manufacturers = []
 
   useEffect(() => {
     const fetchItemList = async () => {
@@ -19,26 +20,44 @@ const App: React.FC = () => {
         const { data: jacketListFromApi } = await axios.get<Item[]>(
           `${API_URL}/products/jackets`
         )
+        manufacturers = findManufacturers(jacketListFromApi)
         dispatch(setItems(jacketListFromApi, category.Jackets))
 
         const { data: shirtListFromApi } = await axios.get<Item[]>(
           `${API_URL}/products/shirts`
         )
-        dispatch(setItems(shirtListFromApi, category.Jackets))
+        dispatch(setItems(shirtListFromApi, category.Shirts))
 
         const { data: accessoriesListFromApi } = await axios.get<Item[]>(
           `${API_URL}/products/accessories`
         )
-        dispatch(setItems(accessoriesListFromApi, category.Jackets))
+        dispatch(setItems(accessoriesListFromApi, category.Accessories))
 
+        console.log(manufacturers)
       } catch (e) {
         console.error(e)
       }
     }
 
+    const findManufacturers = (items: Item[]): string[] => {
+      const allManufacturers = items.map(i => i.manufacturer)
+      const uniques = [...new Set(allManufacturers)]
+      return uniques
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchItemList()
   }, [dispatch])
+
+ /* useEffect(() => {
+    const fetchAvailabilityData = async () => {
+      try {
+
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }, [])*/
 
   return (
     <div>
