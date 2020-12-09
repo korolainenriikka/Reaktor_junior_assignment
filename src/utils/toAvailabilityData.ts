@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import parser from 'fast-xml-parser'
 import { Availability, AvailabilityData } from '../types'
 
 const isString = (param: any): param is string => {
@@ -17,17 +19,19 @@ const isAvailability = (param: any): param is Availability => {
   return Object.values(Availability).includes(param)
 }
 
-const toAvailability = (param: any): Availability => {
-  const parser = new DOMParser()
-  const availabilityObject = parser.parseFromString(param, 'text/xml')
-  console.log(availabilityObject.AVAILABILITY)
-  console.log('availability:')
-  console.log(param)
-  if (!param ||!isAvailability(param)) {
-    throw new Error(`Incorrect or missing availability: ${String(param)}`)
-  }
+const toAvailability = (availabilityInXml: any): Availability => {
+  try {
+    const availabilityInJSON = parser.parse(availabilityInXml)
+    const availability = availabilityInJSON.AVAILABILITY.INSTOCKVALUE
 
-  return param
+    if (!availability ||!isAvailability(availability)) {
+      throw new Error(`Incorrect or missing availability: ${String(availability)}`)
+    }
+    return availability
+
+  } catch (e) {
+    throw new Error('Unexpected availability data format')
+  }
 }
 
 const toAvailabilityData = (item: any): AvailabilityData => {
@@ -41,9 +45,10 @@ const toAvailabilityDataArray = (array: any[]):AvailabilityData[] => {
   return array.map(item => toAvailabilityData(item))
 }
 
-export const axiosResToAvailabilityData = (object: any): AvailabilityData[] => {
-  if (object.data.response && Array.isArray(object.data.response)) {
-    return toAvailabilityDataArray(object.data.response)
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const axiosResToAvailabilityData = (response: any): AvailabilityData[] => {
+  if (response.data.response && Array.isArray(response.data.response)) {
+    return toAvailabilityDataArray(response.data.response)
   } else {
     throw new Error('unexpected response format')
   }
