@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 
-import Page from './Page'
-import { category, Item, AvailabilityData, AvailabilityResponse } from './types'
+import Page from './components/Page'
+import { category, Item } from './types'
 
 import axios from 'axios'
 
-import { useStateValue, setItems, updateAvailability } from './state'
+import { useStateValue, setItems } from './state'
 import { API_URL } from './constants'
+import { axiosResToAvailabilityData } from './utils/toAvailabilityData'
 
 const App: React.FC = () => {
   const [state, dispatch] = useStateValue()
@@ -18,8 +19,11 @@ const App: React.FC = () => {
       axios.get(
         `${API_URL}/availability/${manufacturerName}`
       ).then( response => {
-        console.log(response.data.response)
-        dispatch(updateAvailability(response.data.response))
+        //IN UTIL: convert res to availabilitydata
+        console.log(response)
+        const availabilityData = axiosResToAvailabilityData(response)
+        console.log(availabilityData)
+        //dispatch(updateAvailability(response.data.response))
       })
       .catch((e) => {
         console.error(e)

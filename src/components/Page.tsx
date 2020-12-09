@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { category, Item } from './types'
+import { category, Item } from '../types'
 
-import ProductTable from './components/ProductTable'
+import ProductTable from './ProductTable'
 
 interface PageProps {
   items: Item[],
