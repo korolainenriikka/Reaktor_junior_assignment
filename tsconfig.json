@@ -14,14 +14,15 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": false,
+    "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "downlevelIteration": true,
     "allowJs": true,
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "src", "jest.config.js"
+    "src",
+    "jest.config.js"
   ]
 }
