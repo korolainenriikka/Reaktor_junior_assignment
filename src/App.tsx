@@ -6,9 +6,9 @@ import { category, Item } from './types'
 
 import axios from 'axios'
 
-import { useStateValue, setItems, updateAvailability } from './state'
+import { useStateValue, setItems /*, updateAvailability*/ } from './state'
 import { API_URL } from './constants'
-import { axiosResToAvailabilityData } from './utils/toAvailabilityData'
+//import { axiosResToAvailabilityData } from './utils/toAvailabilityData'
 
 const App: React.FC = () => {
   const [state, dispatch] = useStateValue()
@@ -17,8 +17,8 @@ const App: React.FC = () => {
   const fetchAvailabilityData = (manufacturerName: string) => {
       axios.get(
         `${API_URL}/availability/${manufacturerName}`
-      ).then( response => {
-        const availabilityData = axiosResToAvailabilityData(response)
+      ).then( /*response*/() => {
+        //const availabilityData = axiosResToAvailabilityData(response)
         //dispatch(updateAvailability(availabilityData))
       })
       .catch((e) => {
