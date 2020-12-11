@@ -24,13 +24,13 @@ const toAvailability = (availabilityInXml: any): Availability => {
     const availabilityInJSON = parser.parse(availabilityInXml)
     const availability = availabilityInJSON.AVAILABILITY.INSTOCKVALUE
 
-    if (!availability ||!isAvailability(availability)) {
-      throw new Error(`Incorrect or missing availability: ${String(availability)}`)
+    if (!isAvailability(availability)) {
+      throw new Error(`Incorrect or missing availability data`)
     }
     return availability
 
   } catch (e) {
-    throw new Error('Unexpected availability data format')
+    throw new Error(`Missing availability data or unexpected format: ${String(availabilityInXml)}`)
   }
 }
 
