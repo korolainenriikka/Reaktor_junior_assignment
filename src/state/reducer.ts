@@ -3,15 +3,15 @@ import { category, Item, AvailabilityData } from '../types'
 
 export type Action =
   | {
-    type: "SET_JACKETS_LIST";
+    type: "SET_GLOVES_LIST";
     payload: Item[];
   }
   | {
-    type: "SET_SHIRTS_LIST";
+    type: "SET_FACEMASKS_LIST";
     payload: Item[];
   }
   | {
-    type: "SET_ACCESSORIES_LIST";
+    type: "SET_BEANIES_LIST";
     payload: Item[];
   }
   | {
@@ -21,25 +21,25 @@ export type Action =
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case "SET_JACKETS_LIST":
+    case "SET_GLOVES_LIST":
       return {
         ...state,
-        jackets: action.payload
+        gloves: action.payload
       }
-    case "SET_SHIRTS_LIST":
+    case "SET_FACEMASKS_LIST":
       return {
         ...state,
-        shirts: action.payload
+        facemasks: action.payload
       }
-    case "SET_ACCESSORIES_LIST":
+    case "SET_BEANIES_LIST":
       return {
         ...state,
-        accessories: action.payload
+        beanies: action.payload
       }
     case "UPDATE_AVAILABILITY_DATA":
       console.log(action.payload)
       console.log(state)
-      return {
+      /*return {
         jackets: state.jackets.map(j => {
           const itemAvailability = action.payload.find(datapoint => datapoint.id === j.id)
           if (itemAvailability) {
@@ -62,7 +62,8 @@ export const reducer = (state: State, action: Action): State => {
           }
           return a
         })
-      }
+      }*/
+      return state
     default:
       return state
   }
@@ -70,24 +71,19 @@ export const reducer = (state: State, action: Action): State => {
 
 export const setItems = (items: Item[], category: category): Action => {
   switch (category){
-    case 'jackets':
+    case 'gloves':
       return {
-        type: 'SET_JACKETS_LIST',
+        type: 'SET_GLOVES_LIST',
         payload: items
       }
-    case 'shirts':
+    case 'facemasks':
       return {
-        type: 'SET_SHIRTS_LIST',
-        payload: items
-      }
-    case 'accessories':
-      return {
-        type: 'SET_ACCESSORIES_LIST',
+        type: 'SET_FACEMASKS_LIST',
         payload: items
       }
     default:
       return {
-        type: 'SET_JACKETS_LIST',
+        type: 'SET_BEANIES_LIST',
         payload: items
       }
   }

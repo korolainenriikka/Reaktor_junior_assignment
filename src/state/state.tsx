@@ -4,15 +4,15 @@ import { Item } from '../types'
 import { Action } from "./reducer"
 
 export type State = {
-  jackets: Item[];
-  shirts: Item[];
-  accessories: Item[];
+  gloves: Item[];
+  facemasks: Item[];
+  beanies: Item[];
 }
 
 const initialState: State = {
-  jackets: [],
-  shirts: [],
-  accessories: []
+  gloves: [],
+  facemasks: [],
+  beanies: []
 }
 
 export const StateContext = createContext<[State, React.Dispatch<Action>]>([

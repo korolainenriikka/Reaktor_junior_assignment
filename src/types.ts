@@ -1,7 +1,7 @@
 export enum category {
-  Jackets = 'jackets',
-  Shirts = 'shirts',
-  Accessories = 'accessories'
+  Gloves = 'gloves',
+  Facemasks = 'facemasks',
+  Beanies = 'beanies'
 }
 
 export interface Item {

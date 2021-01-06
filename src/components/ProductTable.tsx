@@ -14,6 +14,7 @@ const ProductTable: React.FC<TableProps> = (props) => {
           <th>name</th>
           <th>colors</th>
           <th>manufacturer</th>
+          <th>price</th>
           <th>availability</th>
         </tr>
       </thead>
@@ -24,6 +25,7 @@ const ProductTable: React.FC<TableProps> = (props) => {
             <td>{i.name}</td>
             <td>{i.color}</td>
             <td>{i.manufacturer}</td>
+            <td>{i.price}</td>
             <td>{i.availability}</td>
           </tr>
         ))}

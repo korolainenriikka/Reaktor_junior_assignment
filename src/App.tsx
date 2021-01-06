@@ -31,22 +31,22 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchItemList = async () => {
       try {
-        const { data: jacketListFromApi } = await axios.get<Item[]>(
-          `${API_URL}/products/jackets`
+        const { data: facemasksListFromApi } = await axios.get<Item[]>(
+          `${API_URL}/products/facemasks`
         )
-        dispatch(setItems(jacketListFromApi, category.Jackets))
+        dispatch(setItems(facemasksListFromApi, category.Facemasks))
 
-        const { data: shirtListFromApi } = await axios.get<Item[]>(
-          `${API_URL}/products/shirts`
+        const { data: glovesListFromApi } = await axios.get<Item[]>(
+          `${API_URL}/products/gloves`
         )
-        dispatch(setItems(shirtListFromApi, category.Shirts))
+        dispatch(setItems(glovesListFromApi, category.Gloves))
 
-        const { data: accessoriesListFromApi } = await axios.get<Item[]>(
-          `${API_URL}/products/accessories`
+        const { data: beaniesListFromApi } = await axios.get<Item[]>(
+          `${API_URL}/products/beanies`
         )
-        dispatch(setItems(accessoriesListFromApi, category.Accessories))
+        dispatch(setItems(beaniesListFromApi, category.Beanies))
 
-        const manufacturers = findManufacturers(jacketListFromApi, shirtListFromApi, accessoriesListFromApi)
+        const manufacturers = findManufacturers(glovesListFromApi, facemasksListFromApi, beaniesListFromApi)
         manufacturers.forEach(m => fetchAvailabilityData(m))
       } catch (e) {
         console.error(e)
@@ -70,32 +70,32 @@ const App: React.FC = () => {
       <h1>Inventory</h1>
       <Router>
         <button>
-          <Link to="/jackets">Jackets</Link>
+          <Link to="/gloves">Gloves</Link>
         </button>
         <button>
-          <Link to="/shirts">Shirts</Link>
+          <Link to="/facemasks">Face masks</Link>
         </button>
         <button>
-          <Link to="/accessories">Accessories</Link>
+          <Link to="/beanies">Beanies</Link>
         </button>
 
         <Switch>
           <Route path="/jackets" render={() =>
             <Page
-              category={category.Jackets}
-              items={state.jackets}
+              category={category.Gloves}
+              items={state.gloves}
             />}
           />
           <Route path="/shirts" render={() =>
             <Page
-              category={category.Shirts}
-              items={state.shirts}
+              category={category.Facemasks}
+              items={state.facemasks}
             />}
           />
           <Route path="/accessories" render={() =>
             <Page
-              category={category.Accessories}
-              items={state.accessories}
+              category={category.Beanies}
+              items={state.beanies}
             />}
           />
         </Switch>
