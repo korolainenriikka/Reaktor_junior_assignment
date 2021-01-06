@@ -13,7 +13,7 @@ app.get('/*', (req, res) => {
   request(
     { url: `${API_URL}${req.url}` },
     (error, response, body) => {
-      if (error || response.statusCode !== 200) {
+      if (error || response.statusCode !== 200 || !body) {
         return res.status(500).end()
       }
 
@@ -22,5 +22,7 @@ app.get('/*', (req, res) => {
   )
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.NODE_ENV === 'test'? 3002 : process.env.PORT || 3001
 app.listen(PORT, () => console.log(`listening on ${PORT}`))
+
+module.exports = app
