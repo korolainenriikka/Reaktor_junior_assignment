@@ -48,14 +48,14 @@ export const reducer = (state: State, action: Action): State => {
           return g
         }),
         facemasks: state.facemasks.map(f => {
-          const itemAvailability = action.payload.find(datapoint => datapoint.id === f.id)
+          const itemAvailability = action.payload.find(datapoint => datapoint.id.toLowerCase() === f.id)
           if (itemAvailability) {
             f.availability = itemAvailability.availability
           }
           return f
         }),
         beanies: state.beanies.map(b => {
-          const itemAvailability = action.payload.find(datapoint => datapoint.id === b.id)
+          const itemAvailability = action.payload.find(datapoint => datapoint.id.toLowerCase() === b.id)
           if (itemAvailability) {
             b.availability = itemAvailability.availability
           }
