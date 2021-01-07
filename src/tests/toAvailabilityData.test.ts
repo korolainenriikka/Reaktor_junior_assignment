@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Availability } from '../types'
-import { axiosResToAvailabilityData } from '../utils/toAvailabilityData'
+import { resToAvailabilityData } from '../utils/toAvailabilityData'
 
 test('response without property data.response throws error', () => {
   const invalidResponse = {
@@ -10,7 +10,7 @@ test('response without property data.response throws error', () => {
     }
   }
 
-  expect(() => axiosResToAvailabilityData(invalidResponse))
+  expect(() => resToAvailabilityData(invalidResponse))
     .toThrow('unexpected response format')
 })
 
@@ -22,7 +22,7 @@ test('response with non-array data.response throws error', () => {
     }
   }
 
-  expect(() => axiosResToAvailabilityData(invalidResponse))
+  expect(() => resToAvailabilityData(invalidResponse))
     .toThrow('unexpected response format')
 })
 
@@ -44,7 +44,7 @@ test('availability data item without id throws error', () => {
     DATAPAYLOAD: validDataPayload
   }
   const validFormatResponseWithOneInvalidItem = formResponseObject([invalidItem])
-  expect(() => axiosResToAvailabilityData(validFormatResponseWithOneInvalidItem))
+  expect(() => resToAvailabilityData(validFormatResponseWithOneInvalidItem))
     .toThrow('Incorrect or missing id: undefined')
 })
 
@@ -54,7 +54,7 @@ test('availability data item with non-string id throws error', () => {
     DATAPAYLOAD: validDataPayload
   }
   const validFormatResponseWithOneInvalidItem = formResponseObject([invalidItem])
-  expect(() => axiosResToAvailabilityData(validFormatResponseWithOneInvalidItem))
+  expect(() => resToAvailabilityData(validFormatResponseWithOneInvalidItem))
     .toThrow('Incorrect or missing id: 123')
 })
 
@@ -63,7 +63,7 @@ test('availability data item without data payload throws error', () => {
     id: validId
   }
   const validFormatResponseWithOneInvalidItem = formResponseObject([invalidItem])
-  expect(() => axiosResToAvailabilityData(validFormatResponseWithOneInvalidItem))
+  expect(() => resToAvailabilityData(validFormatResponseWithOneInvalidItem))
     .toThrow('Missing availability data or unexpected format: undefined')
 })
 
@@ -73,7 +73,7 @@ test('availability data item with data payload not in xml throws error', () => {
     DATAPAYLOAD: 'available!'
   }
   const validFormatResponseWithOneInvalidItem = formResponseObject([invalidItem])
-  expect(() => axiosResToAvailabilityData(validFormatResponseWithOneInvalidItem))
+  expect(() => resToAvailabilityData(validFormatResponseWithOneInvalidItem))
     .toThrow('Missing availability data or unexpected format: available!')
 })
 
@@ -83,7 +83,7 @@ test('availability data item with data payload in xml but with wrong attributes 
     DATAPAYLOAD: '<NONVALIDBUTXML><SOMETHING>laabalaa</SOMETHING></NONVALIDBUTXML>'
   }
   const validFormatResponseWithOneInvalidItem = formResponseObject([invalidItem])
-  expect(() => axiosResToAvailabilityData(validFormatResponseWithOneInvalidItem))
+  expect(() => resToAvailabilityData(validFormatResponseWithOneInvalidItem))
     .toThrow('Missing availability data or unexpected format: <NONVALIDBUTXML><SOMETHING>laabalaa</SOMETHING></NONVALIDBUTXML>')
 })
 
@@ -98,7 +98,7 @@ test('response array with one invalid item throws error', () => {
     }
   ]
   const validFormatResponseWithOneInvalidItem = formResponseObject(dataWithOneInvalid)
-  expect(() => axiosResToAvailabilityData(validFormatResponseWithOneInvalidItem))
+  expect(() => resToAvailabilityData(validFormatResponseWithOneInvalidItem))
     .toThrow('Missing availability data or unexpected format: undefined')
 })
 
@@ -114,7 +114,7 @@ test('valid response array returns array of type availabilityData', () => {
     }
   ]
   const validResponse = formResponseObject(validData)
-  const availabilityData = axiosResToAvailabilityData(validResponse)
+  const availabilityData = resToAvailabilityData(validResponse)
   expect(availabilityData.length).toBe(2)
   availabilityData.forEach(item => {
     expect(item.id === validId || item.id === validId2).toBe(true)

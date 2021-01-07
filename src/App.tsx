@@ -8,9 +8,9 @@ import { toItemList } from './utils/toItemList'
 
 import axios from 'axios'
 
-import { useStateValue, setItems } from './state'
+import { useStateValue, setItems, updateAvailability } from './state'
 import { API_URL } from './constants'
-import { axiosResToAvailabilityData } from './utils/toAvailabilityData'
+import { resToAvailabilityData } from './utils/toAvailabilityData'
 
 const App: React.FC = () => {
   const [state, dispatch] = useStateValue()
@@ -21,9 +21,9 @@ const App: React.FC = () => {
         `${API_URL}/availability/${manufacturerName}`
       ).then(response => {
         console.log(response)
-        const availabilityData = axiosResToAvailabilityData(response)
+        const availabilityData = resToAvailabilityData(response)
         console.log(availabilityData)
-        //dispatch(updateAvailability(availabilityData))
+        dispatch(updateAvailability(availabilityData))
       })
       .catch((e) => {
         console.error(e)

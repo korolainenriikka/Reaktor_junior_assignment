@@ -39,31 +39,29 @@ export const reducer = (state: State, action: Action): State => {
     case "UPDATE_AVAILABILITY_DATA":
       console.log(action.payload)
       console.log(state)
-      /*return {
-        jackets: state.jackets.map(j => {
-          const itemAvailability = action.payload.find(datapoint => datapoint.id === j.id)
+      return {
+        gloves: state.gloves.map(g => {
+          const itemAvailability = action.payload.find(datapoint => datapoint.id.toLowerCase() === g.id)
           if (itemAvailability) {
-            console.log('found item!')
-            j.availability = itemAvailability.availability
+            g.availability = itemAvailability.availability
           }
-          return j
+          return g
         }),
-        shirts: state.shirts.map(s => {
-          const itemAvailability = action.payload.find(datapoint => datapoint.id === s.id)
+        facemasks: state.facemasks.map(f => {
+          const itemAvailability = action.payload.find(datapoint => datapoint.id === f.id)
           if (itemAvailability) {
-            s.availability = itemAvailability.availability
+            f.availability = itemAvailability.availability
           }
-          return s
+          return f
         }),
-        accessories: state.accessories.map(a => {
-          const itemAvailability = action.payload.find(datapoint => datapoint.id === a.id)
+        beanies: state.beanies.map(b => {
+          const itemAvailability = action.payload.find(datapoint => datapoint.id === b.id)
           if (itemAvailability) {
-            a.availability = itemAvailability.availability
+            b.availability = itemAvailability.availability
           }
-          return a
+          return b
         })
-      }*/
-      return state
+      }
     default:
       return state
   }

@@ -46,7 +46,7 @@ const toAvailabilityDataArray = (array: any[]):AvailabilityData[] => {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const axiosResToAvailabilityData = (response: any): AvailabilityData[] => {
+export const resToAvailabilityData = (response: any): AvailabilityData[] => {
   if (response.data.response && Array.isArray(response.data.response)) {
     return toAvailabilityDataArray(response.data.response)
   } else {
