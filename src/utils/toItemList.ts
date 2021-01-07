@@ -7,10 +7,25 @@ const isString = (param: any): param is string => {
 }
 
 const toString = (param: any, field: string): string => {
-  if (!param || !isString(param)){
+  if (!param || !isString(param)) {
     throw new Error(`Incorrect or missing ${field}: ${String(param)}`)
   }
   return param
+}
+
+const toStringArray = (param: any): string[] => {
+  if (!param || !Array.isArray(param)) {
+    throw new Error(`Incorrect color information format: ${String(param)}`)
+  }
+
+  const stringArray = param.map(object => {
+    if (!isString(object)) {
+      throw new Error(`Incorrect color: ${String(object)}`)
+    }
+    return object
+  })
+
+  return stringArray
 }
 
 const isCategory = (param: any): param is Category => {
@@ -38,9 +53,9 @@ const toNumber = (param: any, field: string): number => {
 const toItem = (object: any): Item => {
   return {
     id: toString(object.id, 'id'),
-    type: toCategory(object.category),
+    type: toCategory(object.type),
     name: toString(object.name, 'name'),
-    color: toString(object.color, 'color'),
+    color: toStringArray(object.color, 'color'),
     price: toNumber(object.price, 'price'),
     manufacturer: toString(object.manufacturer, 'manufacturer'),
     availability: undefined,

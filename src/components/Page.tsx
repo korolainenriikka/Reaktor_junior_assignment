@@ -1,12 +1,12 @@
 import React from 'react'
 
-import { category, Item } from '../types'
+import { Category, Item } from '../types'
 
 import ProductTable from './ProductTable'
 
 interface PageProps {
   items: Item[],
-  category: category;
+  category: Category;
 }
 
 const Page: React.FC<PageProps> = (props: PageProps) => {

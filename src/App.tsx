@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 
 import Page from './components/Page'
-import { Item } from './types'
+import { Category, Item } from './types'
 import toItemList from './utils/toItemList'
 
 import axios from 'axios'
@@ -33,29 +33,39 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchItemList = async () => {
       try {
-        const res: Response/*{ data: facemasksListFromApi }*/ = await fetch(
+        const glovesRes: Response = await fetch(
+          `${API_URL}/products/gloves`
+        )
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const glovesData = await glovesRes.json()
+        console.log(glovesData)
+        const glovesListFromApi = toItemList(glovesData)
+
+        dispatch(setItems(glovesListFromApi, Category.Gloves))
+
+        const maskRes: Response = await fetch(
           `${API_URL}/products/facemasks`
         )
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data = await res.json()
-        const facemasksListFromApi = toItemList(data)
+        const maskData = await maskRes.json()
+        const facemasksListFromApi = toItemList(maskData)
 
-        //const facemasksListFromApi = Response
-        /*dispatch(setItems(facemasksListFromApi, category.Facemasks))
+        dispatch(setItems(facemasksListFromApi, Category.Facemasks))
 
-        const { data: glovesListFromApi } = await axios.get<Item[]>(
-          `${API_URL}/products/gloves`
-        )
-        dispatch(setItems(glovesListFromApi, category.Gloves))
-
-        const { data: beaniesListFromApi } = await axios.get<Item[]>(
+        const beaniesRes: Response = await fetch(
           `${API_URL}/products/beanies`
         )
-        dispatch(setItems(beaniesListFromApi, category.Beanies))
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const beaniesData = await beaniesRes.json()
+        const beaniesListFromApi = toItemList(beaniesData)
+
+        dispatch(setItems(beaniesListFromApi, Category.Beanies))
 
         const manufacturers = findManufacturers(glovesListFromApi, facemasksListFromApi, beaniesListFromApi)
-        manufacturers.forEach(m => fetchAvailabilityData(m))*/
+        manufacturers.forEach(m => fetchAvailabilityData(m))
       } catch (e) {
         console.error(e)
       }
@@ -90,19 +100,19 @@ const App: React.FC = () => {
         <Switch>
           <Route path="/jackets" render={() =>
             <Page
-              category={category.Gloves}
+              category={Category.Gloves}
               items={state.gloves}
             />}
           />
           <Route path="/shirts" render={() =>
             <Page
-              category={category.Facemasks}
+              category={Category.Facemasks}
               items={state.facemasks}
             />}
           />
           <Route path="/accessories" render={() =>
             <Page
-              category={category.Beanies}
+              category={Category.Beanies}
               items={state.beanies}
             />}
           />

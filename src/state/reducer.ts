@@ -1,5 +1,5 @@
 import { State } from './state'
-import { category, Item, AvailabilityData } from '../types'
+import { Category, Item, AvailabilityData } from '../types'
 
 export type Action =
   | {
@@ -69,7 +69,7 @@ export const reducer = (state: State, action: Action): State => {
   }
 }
 
-export const setItems = (items: Item[], category: category): Action => {
+export const setItems = (items: Item[], category: Category): Action => {
   switch (category){
     case 'gloves':
       return {

@@ -6,7 +6,7 @@ export enum Category {
 
 export interface Item {
   id: string;
-  type: category;
+  type: Category;
   name: string;
   color: string;
   price: number;
