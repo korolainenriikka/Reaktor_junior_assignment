@@ -1,4 +1,4 @@
-export enum category {
+export enum Category {
   Gloves = 'gloves',
   Facemasks = 'facemasks',
   Beanies = 'beanies'

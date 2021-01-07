@@ -1,1 +1,1 @@
-export const API_URL = 'https://bad-api-assignment.reaktor.com/v2'
+export const API_URL = 'http://localhost:3001'
