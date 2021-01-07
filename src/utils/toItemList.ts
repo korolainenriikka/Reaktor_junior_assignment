@@ -15,7 +15,7 @@ const toString = (param: any, field: string): string => {
 
 const toStringArray = (param: any): string[] => {
   if (!param || !Array.isArray(param)) {
-    throw new Error(`Incorrect color information format: ${String(param)}`)
+    throw new Error(`Incorrect or missing color: ${String(param)}`)
   }
 
   const stringArray = param.map(object => {
@@ -55,7 +55,7 @@ const toItem = (object: any): Item => {
     id: toString(object.id, 'id'),
     type: toCategory(object.type),
     name: toString(object.name, 'name'),
-    color: toStringArray(object.color, 'color'),
+    color: toStringArray(object.color),
     price: toNumber(object.price, 'price'),
     manufacturer: toString(object.manufacturer, 'manufacturer'),
     availability: undefined,
@@ -71,8 +71,6 @@ export const toItemList = (data: any): Item[] => {
   if (data && Array.isArray(data)) {
     return toItemArray(data)
   } else {
-    throw new Error('Product data missing')
+    throw new Error('Product data missing or malformatted')
   }
 }
-
-export default toItemList

@@ -23,7 +23,7 @@ const ProductTable: React.FC<TableProps> = (props) => {
           <tr key={i.id}>
             <td>{i.id}</td>
             <td>{i.name}</td>
-            <td>{i.color}</td>
+            <td>(colors here...)</td>
             <td>{i.manufacturer}</td>
             <td>{i.price}</td>
             <td>{i.availability}</td>

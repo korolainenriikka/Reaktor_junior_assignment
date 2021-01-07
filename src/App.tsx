@@ -4,11 +4,11 @@ import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 
 import Page from './components/Page'
 import { Category, Item } from './types'
-import toItemList from './utils/toItemList'
+import { toItemList } from './utils/toItemList'
 
 import axios from 'axios'
 
-import { useStateValue, setItems /*, updateAvailability*/ } from './state'
+import { useStateValue, setItems } from './state'
 import { API_URL } from './constants'
 import { axiosResToAvailabilityData } from './utils/toAvailabilityData'
 
@@ -98,19 +98,19 @@ const App: React.FC = () => {
         </button>
 
         <Switch>
-          <Route path="/jackets" render={() =>
+          <Route path="/gloves" render={() =>
             <Page
               category={Category.Gloves}
               items={state.gloves}
             />}
           />
-          <Route path="/shirts" render={() =>
+          <Route path="/facemasks" render={() =>
             <Page
               category={Category.Facemasks}
               items={state.facemasks}
             />}
           />
-          <Route path="/accessories" render={() =>
+          <Route path="/beanies" render={() =>
             <Page
               category={Category.Beanies}
               items={state.beanies}

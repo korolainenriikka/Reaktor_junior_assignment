@@ -8,7 +8,7 @@ export interface Item {
   id: string;
   type: Category;
   name: string;
-  color: string;
+  color: string[];
   price: number;
   manufacturer: string;
   availability: Availability | undefined;
