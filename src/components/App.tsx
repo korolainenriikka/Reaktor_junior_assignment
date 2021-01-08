@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect } from 'react'
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
+import { HashRouter as Router, Route, Link, Switch } from "react-router-dom"
 
 import Page from './Page'
 import { Category, Item } from '../types'
@@ -94,7 +94,7 @@ const App: React.FC = () => {
   return (
     <div>
       <h1>Inventory</h1>
-      <Router>
+      <Router basename={'/'}>
         <button>
           <Link to="/gloves">Gloves</Link>
         </button>
@@ -106,7 +106,7 @@ const App: React.FC = () => {
         </button>
 
         <Switch>
-          <Route path="/gloves" render={() =>
+          <Route path="gloves" render={() =>
             <Page
               category={Category.Gloves}
               items={state.gloves}
