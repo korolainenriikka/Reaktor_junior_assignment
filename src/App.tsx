@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 
 import Page from './components/Page'
-import { AvailabilityData, Category, Item } from './types'
+import { Category, Item } from './types'
 import { toItemList } from './utils/toItemList'
 
 import axios from 'axios'
@@ -12,38 +12,31 @@ import { useStateValue, setItems, updateAvailability } from './state'
 import { resToAvailabilityData } from './utils/toAvailabilityData'
 
 const App: React.FC = () => {
-  console.log('deploy script test!')
   const [state, dispatch] = useStateValue()
   console.log(state)
 
   const fetchAvailabilityData = (manufacturerName: string) => {
-    // eslint-disable-next-line no-constant-condition
-      console.log('fetching availability from ')
-      console.log(manufacturerName)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const response = fetchData(manufacturerName)
-
-      console.log(response)
-
-      try {
-        const availabilityData = resToAvailabilityData(response)
-        console.log(availabilityData)
-        dispatch(updateAvailability(availabilityData))
-      } catch (e) {
-        console.log('random error !')
-      }
+      fetchData(manufacturerName)
+        .then(response => {
+          console.log(response)
+          try {
+            const availabilityData = resToAvailabilityData(response)
+            console.log(availabilityData)
+            dispatch(updateAvailability(availabilityData))
+          } catch (e) {
+            console.log('random error !')
+            fetchAvailabilityData(manufacturerName)
+          }
+        })
+        .catch(e => {
+          console.error(e)
+        })
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fetchData = (manufacturerName: string): any => {
+  const fetchData = (manufacturerName: string): Promise<any> => (
     axios.get(`/availability/${manufacturerName}`)
-      .then(result => {
-        return result
-      })
-      .catch(e => {
-        console.error(e)
-      })
-  }
+  )
 
   useEffect(() => {
     const fetchItemList = async () => {
