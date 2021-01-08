@@ -2,14 +2,14 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 
-import Page from './components/Page'
-import { Category, Item } from './types'
-import { toItemList } from './utils/toItemList'
+import Page from './Page'
+import { Category, Item } from '../types'
+import { toItemList } from '../utils/toItemList'
 
 import axios from 'axios'
 
-import { useStateValue, setItems, updateAvailability } from './state'
-import { resToAvailabilityData } from './utils/toAvailabilityData'
+import { useStateValue, setItems, updateAvailability } from '../state'
+import { resToAvailabilityData } from '../utils/toAvailabilityData'
 
 const App: React.FC = () => {
   const [state, dispatch] = useStateValue()
