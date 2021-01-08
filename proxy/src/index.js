@@ -4,6 +4,8 @@ const request = require('request')
 const app = express()
 const API_URL = 'https://bad-api-assignment.reaktor.com/v2'
 
+app.use(express.static('build'))
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   next()
@@ -16,7 +18,6 @@ app.get('/*', (req, res) => {
       if (error || response.statusCode !== 200 || !body) {
         return res.status(500).end()
       }
-
       res.json(JSON.parse(body))
     }
   )

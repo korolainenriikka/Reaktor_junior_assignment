@@ -37,8 +37,7 @@ export const reducer = (state: State, action: Action): State => {
         beanies: action.payload
       }
     case "UPDATE_AVAILABILITY_DATA":
-      console.log(action.payload)
-      console.log(state)
+      //found flag would speed this up!!
       return {
         gloves: state.gloves.map(g => {
           const itemAvailability = action.payload.find(datapoint => datapoint.id.toLowerCase() === g.id)
