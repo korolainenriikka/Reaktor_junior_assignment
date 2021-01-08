@@ -25,7 +25,9 @@
     "build": "react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
-    "lint": "eslint './src/**/*.{ts,tsx}'"
+    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "deploy": "npm run build && cp -r build/ proxy/ && cd proxy/ && git add . && git commit -m 'build' && git push heroku master",
+    "deploy:full": "npm run test && npm run lint && npm run deploy"
   },
   "eslintConfig": {
     "extends": [

@@ -12,6 +12,7 @@ import { useStateValue, setItems, updateAvailability } from './state'
 import { resToAvailabilityData } from './utils/toAvailabilityData'
 
 const App: React.FC = () => {
+  console.log('deploy script test!')
   const [state, dispatch] = useStateValue()
   console.log(state)
 
