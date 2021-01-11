@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect } from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */ /*rm when state -> hooks done!!*/
+import React, { useEffect, useState } from 'react'
 import { HashRouter as Router, Route, Link, Switch } from "react-router-dom"
 
 import Page from './Page'
@@ -7,7 +7,7 @@ import { Category, Item } from '../types'
 import { toItemList } from '../utils/toItemList'
 
 import axios from 'axios'
-import { useGloves } from '../hooks'
+import { useGloves, useFacemasks, useBeanies } from '../hooks'
 
 import { useStateValue, setItems, updateAvailability } from '../state'
 import { resToAvailabilityData } from '../utils/toAvailabilityData'
@@ -15,14 +15,33 @@ import { resToAvailabilityData } from '../utils/toAvailabilityData'
 const App: React.FC = () => {
   const [state, dispatch] = useStateValue()
 
-  const {data, isLoading} = useGloves()
+  const [gloves, setGloves] = useState<Item[]>([])
+  const [facemasks, setFacemasks] = useState<Item[]>([])
+  const [beanies, setBeanies] = useState<Item[]>([])
 
-  if (!isLoading) {
-    console.log('DATAAAAAAAA')
-    console.log(data)
-  }
 
-  const fetchAvailabilityData = (manufacturerName: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { data: glovesResponse, isLoading: isLoadingGloves } = useGloves()
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { data: facemasksResponse, isLoading: isLoadingFacemasks } = useFacemasks()
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { data: beaniesResponse, isLoading: isLoadingBeanies } = useBeanies()
+
+  useEffect(() => {
+    if (!isLoadingGloves) {
+      setGloves(toItemList(glovesResponse))
+    }
+    if (!isLoadingFacemasks) {
+      setFacemasks(toItemList(facemasksResponse))
+    }
+    if (!isLoadingBeanies) {
+      setBeanies(toItemList(beaniesResponse))
+    }
+  }, [glovesResponse, facemasksResponse, beaniesResponse, isLoadingBeanies, isLoadingGloves, isLoadingFacemasks])
+
+  /*const fetchAvailabilityData = (manufacturerName: string) => {
       fetchData(manufacturerName)
         .then(response => {
           try {
@@ -92,7 +111,7 @@ const App: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchItemList()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch])
+  }, [dispatch])*/
 
   return (
     <div>
@@ -109,22 +128,22 @@ const App: React.FC = () => {
         </button>
 
         <Switch>
-          <Route path="gloves" render={() =>
+          <Route path="/gloves" render={() =>
             <Page
               category={Category.Gloves}
-              items={state.gloves}
+              items={gloves}
             />}
           />
           <Route path="/facemasks" render={() =>
             <Page
               category={Category.Facemasks}
-              items={state.facemasks}
+              items={facemasks}
             />}
           />
           <Route path="/beanies" render={() =>
             <Page
               category={Category.Beanies}
-              items={state.beanies}
+              items={beanies}
             />}
           />
         </Switch>

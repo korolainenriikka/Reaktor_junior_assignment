@@ -67,9 +67,9 @@ const toItemArray = (array: any[]): Item[] => {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const toItemList = (data: any): Item[] => {
-  if (data && Array.isArray(data)) {
-    return toItemArray(data)
+export const toItemList = (response: any): Item[] => {
+  if (response.data && Array.isArray(response.data)) {
+    return toItemArray(response.data)
   } else {
     throw new Error('Product data missing or malformatted')
   }
