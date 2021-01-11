@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
-import { reducer, StateProvider } from './state'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 //react-query:
@@ -10,9 +9,7 @@ const queryClient = new QueryClient()
 
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>
-    <StateProvider reducer={reducer}>
-      <App />
-    </StateProvider>
+    <App />
   </QueryClientProvider>,
   document.getElementById('root')
 )

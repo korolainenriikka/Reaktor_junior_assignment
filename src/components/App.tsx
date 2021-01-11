@@ -9,16 +9,12 @@ import { toItemList } from '../utils/toItemList'
 import axios from 'axios'
 import { useGloves, useFacemasks, useBeanies } from '../hooks'
 
-import { useStateValue, setItems, updateAvailability } from '../state'
 import { resToAvailabilityData } from '../utils/toAvailabilityData'
 
 const App: React.FC = () => {
-  const [state, dispatch] = useStateValue()
-
   const [gloves, setGloves] = useState<Item[]>([])
   const [facemasks, setFacemasks] = useState<Item[]>([])
   const [beanies, setBeanies] = useState<Item[]>([])
-
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { data: glovesResponse, isLoading: isLoadingGloves } = useGloves()
@@ -41,12 +37,18 @@ const App: React.FC = () => {
     }
   }, [glovesResponse, facemasksResponse, beaniesResponse, isLoadingBeanies, isLoadingGloves, isLoadingFacemasks])
 
-  /*const fetchAvailabilityData = (manufacturerName: string) => {
+  useEffect(() => {
+    const manufacturers = findManufacturers(gloves, facemasks, beanies)
+    manufacturers.forEach(m => fetchAvailabilityData(m))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gloves, facemasks, beanies])
+
+  const fetchAvailabilityData = (manufacturerName: string) => {
       fetchData(manufacturerName)
         .then(response => {
           try {
             const availabilityData = resToAvailabilityData(response)
-            dispatch(updateAvailability(availabilityData))
+            console.log(availabilityData)
           } catch (e) {
             fetchAvailabilityData(manufacturerName)
           }
@@ -61,57 +63,13 @@ const App: React.FC = () => {
     axios.get(`/availability/${manufacturerName}`)
   )
 
-  useEffect(() => {
-    const fetchItemList = async () => {
-      try {
-        const glovesRes: Response = await fetch(
-          `/products/gloves`
-        )
+  const findManufacturers = (...lists: Item[][]): string[] => {
+    const allManufacturers:string[] = []
+    lists.forEach(list => list.forEach(item => allManufacturers.push(item.manufacturer)))
+    const uniques = [...new Set(allManufacturers)]
+    return uniques
+  }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const glovesData = await glovesRes.json()
-        const glovesListFromApi = toItemList(glovesData)
-
-        dispatch(setItems(glovesListFromApi, Category.Gloves))
-
-        const maskRes: Response = await fetch(
-          `/products/facemasks`
-        )
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const maskData = await maskRes.json()
-        const facemasksListFromApi = toItemList(maskData)
-
-        dispatch(setItems(facemasksListFromApi, Category.Facemasks))
-
-        const beaniesRes: Response = await fetch(
-          `/products/beanies`
-        )
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const beaniesData = await beaniesRes.json()
-        const beaniesListFromApi = toItemList(beaniesData)
-
-        dispatch(setItems(beaniesListFromApi, Category.Beanies))
-
-        const manufacturers = findManufacturers(glovesListFromApi, facemasksListFromApi, beaniesListFromApi)
-        manufacturers.forEach(m => fetchAvailabilityData(m))
-      } catch (e) {
-        console.error(e)
-      }
-    }
-
-    const findManufacturers = (...lists: Item[][]): string[] => {
-      const allManufacturers:string[] = []
-      lists.forEach(list => list.forEach(item => allManufacturers.push(item.manufacturer)))
-      const uniques = [...new Set(allManufacturers)]
-      return uniques
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    fetchItemList()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch])*/
 
   return (
     <div>
@@ -153,3 +111,28 @@ const App: React.FC = () => {
 }
 
 export default App
+
+
+/*return {
+        gloves: state.gloves.map(g => {
+          const itemAvailability = action.payload.find(datapoint => datapoint.id.toLowerCase() === g.id)
+          if (itemAvailability) {
+            g.availability = itemAvailability.availability
+          }
+          return g
+        }),
+        facemasks: state.facemasks.map(f => {
+          const itemAvailability = action.payload.find(datapoint => datapoint.id.toLowerCase() === f.id)
+          if (itemAvailability) {
+            f.availability = itemAvailability.availability
+          }
+          return f
+        }),
+        beanies: state.beanies.map(b => {
+          const itemAvailability = action.payload.find(datapoint => datapoint.id.toLowerCase() === b.id)
+          if (itemAvailability) {
+            b.availability = itemAvailability.availability
+          }
+          return b
+        })
+      }*/

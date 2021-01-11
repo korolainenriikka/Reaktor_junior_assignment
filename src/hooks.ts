@@ -1,10 +1,5 @@
 import axios from 'axios'
 import { QueryObserverResult, useQuery } from 'react-query'
-import { Category } from './types'
-
-/*export const useProducts = (category: Category): QueryObserverResult[] => (
-  
-)*/
 
 export const useGloves = (): QueryObserverResult => (
   useQuery('gloves', () => axios.get('/products/gloves'))
