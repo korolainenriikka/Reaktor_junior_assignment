@@ -7,7 +7,7 @@ import { AvailabilityData, Category, Item } from '../types'
 import { toItemList } from '../utils/toItemList'
 
 import axios from 'axios'
-import { useGloves, useFacemasks, useBeanies } from '../hooks'
+import { useGloves, useFacemasks, useBeanies, useAvailability } from '../hooks'
 
 import { resToAvailabilityData } from '../utils/toAvailabilityData'
 
@@ -16,32 +16,51 @@ const App: React.FC = () => {
   const [facemasks, setFacemasks] = useState<Item[]>([])
   const [beanies, setBeanies] = useState<Item[]>([])
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data: glovesResponse, isLoading: isLoadingGloves } = useGloves()
+  const [manufacturers, setManufacturers] = useState<string[]>([])
+  const [clientStateUpdated, setClientStateUpdated] = useState(false)
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data: facemasksResponse, isLoading: isLoadingFacemasks } = useFacemasks()
+  const { data: glovesResponse, isLoading: isLoadingGloves, isStale: isStaleGloves } = useGloves()
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data: beaniesResponse, isLoading: isLoadingBeanies } = useBeanies()
+  const { data: facemasksResponse, isLoading: isLoadingFacemasks, isStale: isStaleFacemasks } = useFacemasks()
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { data: beaniesResponse, isLoading: isLoadingBeanies, isStale: isStaleBeanies } = useBeanies()
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const results = useAvailability(manufacturers)
+  results.forEach(r => {
+    if (!r.isLoading) {
+      console.log(r.data)
+    }
+  })
+  console.log(manufacturers)
   useEffect(() => {
-    if (!isLoadingGloves) {
-      setGloves(toItemList(glovesResponse))
-    }
-    if (!isLoadingFacemasks) {
-      setFacemasks(toItemList(facemasksResponse))
-    }
-    if (!isLoadingBeanies) {
-      setBeanies(toItemList(beaniesResponse))
-    }
-  }, [glovesResponse, facemasksResponse, beaniesResponse, isLoadingBeanies, isLoadingGloves, isLoadingFacemasks])
+    if (!clientStateUpdated &&
+      !isLoadingGloves && !isLoadingFacemasks && !isLoadingBeanies) {
+      console.log('we got data we updatin')
+      const updatedGloves = toItemList(glovesResponse)
+      setGloves(updatedGloves)
 
-  useEffect(() => {
-    const manufacturers = findManufacturers(gloves, facemasks, beanies)
-    manufacturers.forEach(m => fetchAvailabilityData(m))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gloves, facemasks, beanies])
+      const updatedFacemasks = toItemList(facemasksResponse)
+      setFacemasks(updatedFacemasks)
+
+      const updatedBeanies = toItemList(beaniesResponse)
+      setBeanies(updatedBeanies)
+
+      setManufacturers(findManufacturers(updatedGloves, updatedFacemasks, updatedBeanies))
+      setClientStateUpdated(true)
+    }
+
+    if (isStaleGloves || isStaleFacemasks || isStaleBeanies) {
+      console.log('datas stale set to refetch')
+      setClientStateUpdated(false)
+    }
+    //find manufacturers and update => effect hook w menufacturer dependency in actionn
+  }, [glovesResponse, facemasksResponse, beaniesResponse, isLoadingBeanies,
+    isLoadingGloves, isLoadingFacemasks, gloves, facemasks, beanies, clientStateUpdated, isStaleGloves, isStaleFacemasks, isStaleBeanies])
+
 
   const fetchAvailabilityData = (manufacturerName: string) => {
       fetchData(manufacturerName)
