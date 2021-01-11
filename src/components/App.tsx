@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { HashRouter as Router, Route, Link, Switch } from "react-router-dom"
 
 import Page from './Page'
-import { Category, Item } from '../types'
+import { AvailabilityData, Category, Item } from '../types'
 import { toItemList } from '../utils/toItemList'
 
 import axios from 'axios'
@@ -49,6 +49,7 @@ const App: React.FC = () => {
           try {
             const availabilityData = resToAvailabilityData(response)
             console.log(availabilityData)
+            updateProductAvailabilities(availabilityData)
           } catch (e) {
             fetchAvailabilityData(manufacturerName)
           }
@@ -70,7 +71,21 @@ const App: React.FC = () => {
     return uniques
   }
 
+  const updateProductAvailabilities = (availabilityData: AvailabilityData[]) => {
+    setGloves(addAvailability(gloves, availabilityData))
+    setFacemasks(addAvailability(facemasks, availabilityData))
+    setBeanies(addAvailability(beanies, availabilityData))
+  }
 
+  const addAvailability = (initalItems: Item[], availabilityData: AvailabilityData[]): Item[] => {
+    return initalItems.map(i => {
+      const itemAvailability = availabilityData.find(datapoint => datapoint.id.toLowerCase() === i.id)
+          if (itemAvailability) {
+            i.availability = itemAvailability.availability
+          }
+          return i
+    })
+  }
   return (
     <div>
       <h1>Inventory</h1>
@@ -111,28 +126,3 @@ const App: React.FC = () => {
 }
 
 export default App
-
-
-/*return {
-        gloves: state.gloves.map(g => {
-          const itemAvailability = action.payload.find(datapoint => datapoint.id.toLowerCase() === g.id)
-          if (itemAvailability) {
-            g.availability = itemAvailability.availability
-          }
-          return g
-        }),
-        facemasks: state.facemasks.map(f => {
-          const itemAvailability = action.payload.find(datapoint => datapoint.id.toLowerCase() === f.id)
-          if (itemAvailability) {
-            f.availability = itemAvailability.availability
-          }
-          return f
-        }),
-        beanies: state.beanies.map(b => {
-          const itemAvailability = action.payload.find(datapoint => datapoint.id.toLowerCase() === b.id)
-          if (itemAvailability) {
-            b.availability = itemAvailability.availability
-          }
-          return b
-        })
-      }*/
