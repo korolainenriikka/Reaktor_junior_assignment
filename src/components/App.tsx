@@ -7,24 +7,28 @@ import { Category, Item } from '../types'
 import { toItemList } from '../utils/toItemList'
 
 import axios from 'axios'
+import { useGloves } from '../hooks'
 
 import { useStateValue, setItems, updateAvailability } from '../state'
 import { resToAvailabilityData } from '../utils/toAvailabilityData'
 
 const App: React.FC = () => {
   const [state, dispatch] = useStateValue()
-  console.log(state)
+
+  const {data, isLoading} = useGloves()
+
+  if (!isLoading) {
+    console.log('DATAAAAAAAA')
+    console.log(data)
+  }
 
   const fetchAvailabilityData = (manufacturerName: string) => {
       fetchData(manufacturerName)
         .then(response => {
-          console.log(response)
           try {
             const availabilityData = resToAvailabilityData(response)
-            console.log(availabilityData)
             dispatch(updateAvailability(availabilityData))
           } catch (e) {
-            console.log('random error !')
             fetchAvailabilityData(manufacturerName)
           }
         })
@@ -47,7 +51,6 @@ const App: React.FC = () => {
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const glovesData = await glovesRes.json()
-        console.log(glovesData)
         const glovesListFromApi = toItemList(glovesData)
 
         dispatch(setItems(glovesListFromApi, Category.Gloves))
