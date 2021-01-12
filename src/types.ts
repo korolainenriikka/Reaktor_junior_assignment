@@ -31,8 +31,16 @@ export interface AvailabilityResponse {
 }
 
 export interface QueryResult {
-  data: Item[] | undefined,
+  data: Item[],
   isLoading: boolean,
   isError: boolean
 }
 
+export interface ProductHook {
+  gloves: Item[],
+  facemasks: Item[],
+  beanies: Item[],
+  /*isLoading: boolean,
+  isError: boolean,
+  isUpdating: boolean,*/
+}
