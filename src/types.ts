@@ -29,3 +29,10 @@ export interface AvailabilityResponse {
   status: number,
   response: AvailabilityData[]
 }
+
+export interface QueryResult {
+  data: Item[] | undefined,
+  isLoading: boolean,
+  isError: boolean
+}
+

@@ -3,7 +3,7 @@ import React from 'react'
 import { Category, Item } from '../types'
 
 interface PageProps {
-  items: Item[],
+  items: Item[] | undefined,
   category: Category;
 }
 
@@ -15,6 +15,9 @@ const Page: React.FC<PageProps> = (props: PageProps) => {
     return str.slice(0, -2)
   }
 
+  if (props.items === undefined) {
+    return <p>loading...</p>
+  }
   return (
     <div>
       In category: {props.category}

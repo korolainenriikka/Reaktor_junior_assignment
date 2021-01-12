@@ -6,82 +6,26 @@ import Page from './Page'
 import { AvailabilityData, Category, Item } from '../types'
 import { toItemList } from '../utils/toItemList'
 
-import axios from 'axios'
 import { useGloves, useFacemasks, useBeanies, useAvailability } from '../hooks'
 
 import { resToAvailabilityData } from '../utils/toAvailabilityData'
 
 const App: React.FC = () => {
-  const [gloves, setGloves] = useState<Item[]>([])
-  const [facemasks, setFacemasks] = useState<Item[]>([])
-  const [beanies, setBeanies] = useState<Item[]>([])
 
-  const [manufacturers, setManufacturers] = useState<string[]>([])
-  const [clientStateUpdated, setClientStateUpdated] = useState(false)
+  //const [manufacturers, setManufacturers] = useState<string[]>([])
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data: glovesResponse, isLoading: isLoadingGloves, isStale: isStaleGloves } = useGloves()
+  const { data: glovesData, isLoading: isLoadingGloves } = useGloves()
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data: facemasksResponse, isLoading: isLoadingFacemasks, isStale: isStaleFacemasks } = useFacemasks()
+  const { data: facemasksData, isLoading: isLoadingFacemasks } = useFacemasks()
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data: beaniesResponse, isLoading: isLoadingBeanies, isStale: isStaleBeanies } = useBeanies()
+  const { data: beaniesData, isLoading: isLoadingBeanies } = useBeanies()
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const results = useAvailability(manufacturers)
-  results.forEach(r => {
-    if (!r.isLoading) {
-      console.log(r.data)
-    }
-  })
-  console.log(manufacturers)
-  useEffect(() => {
-    if (!clientStateUpdated &&
-      !isLoadingGloves && !isLoadingFacemasks && !isLoadingBeanies) {
-      console.log('we got data we updatin')
-      const updatedGloves = toItemList(glovesResponse)
-      setGloves(updatedGloves)
+  //const results = useAvailability(manufacturers)
 
-      const updatedFacemasks = toItemList(facemasksResponse)
-      setFacemasks(updatedFacemasks)
-
-      const updatedBeanies = toItemList(beaniesResponse)
-      setBeanies(updatedBeanies)
-
-      setManufacturers(findManufacturers(updatedGloves, updatedFacemasks, updatedBeanies))
-      setClientStateUpdated(true)
-    }
-
-    if (isStaleGloves || isStaleFacemasks || isStaleBeanies) {
-      console.log('datas stale set to refetch')
-      setClientStateUpdated(false)
-    }
-    //find manufacturers and update => effect hook w menufacturer dependency in actionn
-  }, [glovesResponse, facemasksResponse, beaniesResponse, isLoadingBeanies,
-    isLoadingGloves, isLoadingFacemasks, gloves, facemasks, beanies, clientStateUpdated, isStaleGloves, isStaleFacemasks, isStaleBeanies])
-
-
-  const fetchAvailabilityData = (manufacturerName: string) => {
-      fetchData(manufacturerName)
-        .then(response => {
-          try {
-            const availabilityData = resToAvailabilityData(response)
-            console.log(availabilityData)
-            updateProductAvailabilities(availabilityData)
-          } catch (e) {
-            fetchAvailabilityData(manufacturerName)
-          }
-        })
-        .catch(e => {
-          console.error(e)
-        })
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fetchData = (manufacturerName: string): Promise<any> => (
-    axios.get(`/availability/${manufacturerName}`)
-  )
 
   const findManufacturers = (...lists: Item[][]): string[] => {
     const allManufacturers:string[] = []
@@ -89,6 +33,19 @@ const App: React.FC = () => {
     const uniques = [...new Set(allManufacturers)]
     return uniques
   }
+
+  /*useEffect(() => {
+    results.forEach(r => {
+      if (!r.isLoading) {
+        try {
+          updateProductAvailabilities(resToAvailabilityData(r.data))
+        } catch (e) {
+          console.log('random err')
+        }
+      }
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [results])
 
   const updateProductAvailabilities = (availabilityData: AvailabilityData[]) => {
     setGloves(addAvailability(gloves, availabilityData))
@@ -104,7 +61,8 @@ const App: React.FC = () => {
           }
           return i
     })
-  }
+  }*/
+
   return (
     <div>
       <h1>Inventory</h1>
@@ -123,19 +81,19 @@ const App: React.FC = () => {
           <Route path="/gloves" render={() =>
             <Page
               category={Category.Gloves}
-              items={gloves}
+              items={glovesData}
             />}
           />
           <Route path="/facemasks" render={() =>
             <Page
               category={Category.Facemasks}
-              items={facemasks}
+              items={facemasksData}
             />}
           />
           <Route path="/beanies" render={() =>
             <Page
               category={Category.Beanies}
-              items={beanies}
+              items={beaniesData}
             />}
           />
         </Switch>
