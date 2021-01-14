@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ /*rm when state -> hooks done!!*/
 import React from 'react'
 import { HashRouter as Router, Route, Link, Switch } from "react-router-dom"
 
