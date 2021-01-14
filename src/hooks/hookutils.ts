@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios'
 import { Item, AvailabilityData } from '../types'
-import { resToAvailabilityData } from '../utils/toAvailabilityData'
-import { toItemList } from '../utils/toItemList'
+import { resToAvailabilityData } from '../type_checkers/toAvailabilityData'
+import { toItemList } from '../type_checkers/toItemList'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const dataToItems = (hookData: any): Item[] => {
