@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useQuery } from 'react-query'
 
 import { AvailabilityData, Item, ProductHook, QueryResult } from '../types'
-import { dataToAvailabilities, dataToItems, fetchAvailabilityData, findManufacturers } from './hookutils'
+import { addAvailability, dataToAvailabilities, dataToItems, fetchAvailabilityData, findManufacturers } from './hookutils'
 
 export const useProducts = (): ProductHook => {
   const { data: glovesData,
@@ -39,11 +39,13 @@ export const useProducts = (): ProductHook => {
       setAvailabilityData([])
 
       const manufacturers = findManufacturers(glovesData, facemasksData, beaniesData)
+      let availabilities: AvailabilityData[] = []
       manufacturers.forEach(m => {
         fetchAvailabilityData(m)
           .then(res => {
             const data = dataToAvailabilities(res)
-            setAvailabilityData(availabilityData.concat(data))
+            availabilities = availabilities.concat(data)
+            setAvailabilityData(availabilities)
           })
           .catch(e => {
             //later: refetch on err?
@@ -54,6 +56,13 @@ export const useProducts = (): ProductHook => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [glovesData, facemasksData, beaniesData])
+
+  useEffect(() => {
+    setGloves(addAvailability(gloves, availabilityData))
+    setFacemasks(addAvailability(facemasks, availabilityData))
+    setBeanies(addAvailability(beanies, availabilityData))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [availabilityData])
 
   return {gloves, facemasks, beanies}
 }

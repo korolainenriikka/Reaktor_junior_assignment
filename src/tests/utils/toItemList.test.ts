@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { toItemList } from '../../utils/toItemList'
+import { toItemList } from '../../type_checkers/toItemList'
 
 const validItem = {
   id: '3d55ab6b9ce9a6dfb2c952',

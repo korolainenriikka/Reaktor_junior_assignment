@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Availability } from '../../types'
-import { resToAvailabilityData } from '../../utils/toAvailabilityData'
+import { resToAvailabilityData } from '../../type_checkers/toAvailabilityData'
 
 test('response without property data.response throws error', () => {
   const invalidResponse = {
