@@ -22,7 +22,7 @@ export const dataToAvailabilities = (hookData: any): AvailabilityData[] => {
   try {
     dataAsAvailability = resToAvailabilityData(hookData)
   } catch {
-    dataAsAvailability = []
+    throw new Error('Built-in API error occurred')
   }
   return dataAsAvailability
 }

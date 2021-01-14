@@ -27,7 +27,21 @@ export const useProducts = (): ProductHook => {
   const [availabilityData, setAvailabilityData] = useState<AvailabilityData[]>([])
   const [availabilityUpdated, setAvailabilityUpdated] = useState<boolean>(false)
 
-  console.log(availabilityData)
+  const fetchDataAndUpdateAvailability = (manufacturer: string) => {
+    fetchAvailabilityData(manufacturer)
+      .then(res => {
+        try {
+          const data = dataToAvailabilities(res)
+          setAvailabilityData(availabilityData.concat(data))
+        } catch (e) {
+          console.log(`built-in API error, refetching ${manufacturer}`)
+          fetchDataAndUpdateAvailability(manufacturer)
+        }
+      })
+      .catch(e => {
+        console.error(`unexpected API error: ${String(e)}`)
+      })
+  }
 
   useEffect(() => {
     const isLoading = isLoadingGloves || isLoadingFacemasks || isLoadingBeanies
@@ -39,18 +53,8 @@ export const useProducts = (): ProductHook => {
       setAvailabilityData([])
 
       const manufacturers = findManufacturers(glovesData, facemasksData, beaniesData)
-      let availabilities: AvailabilityData[] = []
       manufacturers.forEach(m => {
-        fetchAvailabilityData(m)
-          .then(res => {
-            const data = dataToAvailabilities(res)
-            availabilities = availabilities.concat(data)
-            setAvailabilityData(availabilities)
-          })
-          .catch(e => {
-            //later: refetch on err?
-            console.error(e)
-          })
+        fetchDataAndUpdateAvailability(m)
       })
       setAvailabilityUpdated(true)
     }
