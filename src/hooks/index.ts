@@ -34,7 +34,6 @@ export const useProducts = (): ProductHook => {
           const data = dataToAvailabilities(res)
           setAvailabilityData(availabilityData.concat(data))
         } catch (e) {
-          console.log(`built-in API error, refetching ${manufacturer}`)
           fetchDataAndUpdateAvailability(manufacturer)
         }
       })
