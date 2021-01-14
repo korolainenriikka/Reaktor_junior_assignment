@@ -8,6 +8,7 @@ import { Category } from '../types'
 import { useProducts } from '../hooks'
 
 const App: React.FC = () => {
+  // per product isloading, + isloadingavailability + isupdating
   const {gloves, facemasks, beanies} = useProducts()
 
   return (

@@ -1,44 +1,59 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */ /**poista tää ku hookit valmiit */
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { QueryFunction, QueryObserverOptions, QueryObserverResult, useQueries, useQuery } from 'react-query'
+import { QueryFunction, QueryObserverOptions, QueryObserverResult, useQuery } from 'react-query'
 import { AvailabilityData, Item, ProductHook, QueryResult } from './types'
 import { resToAvailabilityData } from './utils/toAvailabilityData'
 import { toItemList } from './utils/toItemList'
 
 export const useProducts = (): ProductHook => {
-  const { data: glovesData } = useGloves()
-  const { data: facemasksData } = useFacemasks()
-  const { data: beaniesData } = useBeanies()
+  const { data: glovesData,
+          isLoading: isLoadingGloves,
+          isFetching: isFetchingGloves,
+          isError: isErrorGloves } = useGloves()
+  const { data: facemasksData,
+          isLoading: isLoadingFacemasks,
+          isFetching: isFetchingFacemasks,
+          isError: isErrorFacemasks } = useFacemasks()
+  const { data: beaniesData,
+          isLoading: isLoadingBeanies,
+          isFetching: isFetchingBeanies,
+          isError: isErrorBeanies } = useBeanies()
 
   const [gloves, setGloves] = useState<Item[]>([])
   const [facemasks, setFacemasks] = useState<Item[]>([])
   const [beanies, setBeanies] = useState<Item[]>([])
 
-  const [manufacturers, setManufacturers] = useState<string[]>([])
-  const availabilityHooks: QueryObserverResult[] = useAvailability(manufacturers)
-  const availabilityTypeChecked = availabilityHooks.map(h => {
-    return { ...h, data: dataToAvailabilities(h.data) }
-  })
+  const [availabilityData, setAvailabilityData] = useState<AvailabilityData[]>([])
+  const [availabilityUpdated, setAvailabilityUpdated] = useState<boolean>(false)
 
-  //ISSUE: infinite re-rendering
-  useEffect(() => {
-    setGloves(glovesData)
-    setFacemasks(facemasksData)
-    setBeanies(beaniesData)
-  }, [beaniesData, facemasksData, glovesData])
+  console.log(availabilityData)
 
   useEffect(() => {
-    setManufacturers(findManufacturers(gloves, facemasks, beanies))
+    const isLoading = isLoadingGloves || isLoadingFacemasks || isLoadingBeanies
 
-    availabilityTypeChecked.forEach(h => {
-      if (h.data.length !== 0) {
-        setGloves(addAvailability(gloves, h.data))
-        setFacemasks(addAvailability(gloves, h.data))
-        setBeanies(addAvailability(gloves, h.data))
-      }
-    })
+    if (!isLoading && !availabilityUpdated) {
+      setGloves(glovesData)
+      setFacemasks(facemasksData)
+      setBeanies(beaniesData)
+      setAvailabilityData([])
+
+      const manufacturers = findManufacturers(glovesData, facemasksData, beaniesData)
+      manufacturers.forEach(m => {
+        fetchAvailabilityData(m)
+          .then(res => {
+            const data = dataToAvailabilities(res)
+            setAvailabilityData(availabilityData.concat(data))
+          })
+          .catch(e => {
+            //later: refetch on err?
+            console.error(e)
+          })
+      })
+      setAvailabilityUpdated(true)
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[gloves, facemasks, beanies])
+  }, [glovesData, facemasksData, beaniesData])
 
   return {gloves, facemasks, beanies}
 }
@@ -64,6 +79,7 @@ const dataToItems = (hookData: any): Item[] => {
   try {
     dataAsItems = toItemList(hookData)
   } catch {
+    //throw err -> refetch data
     dataAsItems = []
   }
   return dataAsItems
@@ -80,16 +96,9 @@ const dataToAvailabilities = (hookData: any): AvailabilityData[] => {
   return dataAsAvailability
 }
 
-const useAvailability = (manufacturers: string[]): QueryObserverResult[] => {
-  const queries: QueryObserverOptions[] = []
-  manufacturers.forEach(m => {
-    queries.push({ queryKey: `availability: ${m}`, queryFn: fetchAvailabilityData(m), staleTime: 3*60*1000 })
-  })
-  return useQueries(queries)
-}
-
-const fetchAvailabilityData = (manufacturer: string): QueryFunction<unknown> => (
-  () => axios.get(`/availability/${manufacturer}`)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const fetchAvailabilityData = (manufacturer: string): Promise<any> => (
+  axios.get(`/availability/${manufacturer}`)
 )
 
 const findManufacturers = (...lists: Item[][]): string[] => {

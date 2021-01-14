@@ -33,6 +33,7 @@ export interface AvailabilityResponse {
 export interface QueryResult {
   data: Item[],
   isLoading: boolean,
+  isFetching: boolean,
   isError: boolean
 }
 
