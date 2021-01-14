@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */ /**poista tää ku hookit valmiit */
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { QueryFunction, QueryObserverOptions, QueryObserverResult, useQuery } from 'react-query'
-import { AvailabilityData, Item, ProductHook, QueryResult } from './types'
-import { resToAvailabilityData } from './utils/toAvailabilityData'
-import { toItemList } from './utils/toItemList'
+import { useQuery } from 'react-query'
+
+import { AvailabilityData, Item, ProductHook, QueryResult } from '../types'
+import { dataToAvailabilities, dataToItems, fetchAvailabilityData, findManufacturers } from './hookutils'
 
 export const useProducts = (): ProductHook => {
   const { data: glovesData,
@@ -71,49 +71,4 @@ const useFacemasks = (): QueryResult => {
 const useBeanies = (): QueryResult => {
   const hook = useQuery('beanies', () => axios.get('/products/beanies'), { staleTime: 3*60*1000 })
   return { ...hook, data: dataToItems(hook.data), }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const dataToItems = (hookData: any): Item[] => {
-  let dataAsItems: Item[]
-  try {
-    dataAsItems = toItemList(hookData)
-  } catch {
-    //throw err -> refetch data
-    dataAsItems = []
-  }
-  return dataAsItems
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const dataToAvailabilities = (hookData: any): AvailabilityData[] => {
-  let dataAsAvailability: AvailabilityData[]
-  try {
-    dataAsAvailability = resToAvailabilityData(hookData)
-  } catch {
-    dataAsAvailability = []
-  }
-  return dataAsAvailability
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fetchAvailabilityData = (manufacturer: string): Promise<any> => (
-  axios.get(`/availability/${manufacturer}`)
-)
-
-const findManufacturers = (...lists: Item[][]): string[] => {
-  const allManufacturers:string[] = []
-  lists.forEach(list => list.forEach(item => allManufacturers.push(item.manufacturer)))
-  const uniques = [...new Set(allManufacturers)]
-  return uniques
-}
-
-const addAvailability = (initalItems: Item[], availabilityData: AvailabilityData[]): Item[] => {
-  return initalItems.map(i => {
-    const itemAvailability = availabilityData.find(datapoint => datapoint.id.toLowerCase() === i.id)
-        if (itemAvailability) {
-          i.availability = itemAvailability.availability
-        }
-        return i
-  })
 }
